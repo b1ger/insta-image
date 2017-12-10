@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-lg-5">
             <h3>Login with Facebook</h3>
             <?php echo AuthChoice::widget([
-                'baseAuthUrl' => ['site/auth'],
+                'baseAuthUrl' => ['/user/default/auth'],
                 'popupMode' => false,
             ]) ?>
         </div>

@@ -1,7 +1,8 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\modules\user\models;
 
+use frontend\models\User;
 use yii\db\ActiveRecord;
 
 /**
