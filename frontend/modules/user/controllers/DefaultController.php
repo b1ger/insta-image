@@ -2,7 +2,7 @@
 
 namespace frontend\modules\user\controllers;
 
-use common\models\LoginForm;
+use frontend\modules\user\models\LoginForm;
 use frontend\modules\user\components\AuthHandler;
 use frontend\modules\user\models\PasswordResetRequestForm;
 use frontend\modules\user\models\ResetPasswordForm;
