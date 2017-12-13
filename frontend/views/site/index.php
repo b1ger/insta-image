@@ -25,11 +25,10 @@ $this->title = 'My Yii Application';
 
                 <?php foreach ($users as $user) : ?>
 
+                    <a href="<?php echo Url::to(['/user/profile/view', 'nickname' => $user->getNickName()]) ?>"><?php echo "User name: " . $user->username; ?></a>
+                    <br>
                     <?php echo "User email: " . $user->email; ?>
                     <br>
-                    <?php echo "User name: " . $user->username; ?>
-                    <br>
-                    <a href="<?php echo Url::to(['/user/profile/view', 'id' => $user->id]) ?>">Edit profile</a>
                     <hr>
 
                 <?php endforeach; ?>
