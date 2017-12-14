@@ -20,8 +20,11 @@ class ProfileController extends Controller
      */
     public function actionView($nickname)
     {
+        $currentUser = Yii::$app->user->identity;
+
         return $this->render('view', [
             'user' => $this->findUser($nickname),
+            'currentUser' => $currentUser,
         ]);
     }
 
@@ -81,6 +84,17 @@ class ProfileController extends Controller
             return $user;
         }
         throw new NotFoundHttpException();
+    }
+
+    public function actionEdit()
+    {
+        $user = Yii::$app->user;
+//        echo "<pre>";
+//        print_r($user);
+//        echo "</pre>";die;
+        return $this->render('edit', [
+            'user' => $user,
+        ]);
     }
 
 

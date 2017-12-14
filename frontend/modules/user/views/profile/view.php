@@ -1,6 +1,8 @@
 <?php
 
-/* @var $user frontend\models\user */
+/* @var $this yii\web\View */
+/* @var $user frontend\models\User */
+/* @var $currentUser frontend\models\User */
 
 use yii\helpers\Url;
 use yii\helpers\Html;
@@ -8,19 +10,57 @@ use yii\helpers\HtmlPurifier;
 ?>
 
 <h1><?php echo Html::encode($user->username); ?></h1>
+<?php if (($user->getId() == $currentUser->getId())) : ?>
+    <?php echo Html::a("Edit", ["/user/profile/edit"], ["class" => "btn btn-info"])?>
+<?php endif; ?>
 <p><?php echo HtmlPurifier::process($user->about); ?></p>
 <hr>
-<a href="<?php echo Url::to(['/user/profile/subscribe', 'id' => $user->getId()]) ; ?>" class="btn btn-info">Subscribe</a>
-<a href="<?php echo Url::to(['/user/profile/unsubscribe', 'id' => $user->getId()]) ; ?>" class="btn btn-info">Unsubscribe</a>
+
+<!--<pre>-->
+<!--    --><?php
+//    echo $user->username;
+//    echo "<br>";
+//    echo $currentUser->username;
+//    echo "<br>";
+//    print_r($currentUser->checkSubscription($user));
+//    echo "<br>";
+//    echo $user->getId();
+//    ?>
+<!--</pre>-->
+
+
+<?php if (!($user->getId() == $currentUser->getId())) : ?>
+    <?php if (!$currentUser->checkSubscription($user)) : ?>
+        <a href="<?php echo Url::to(['/user/profile/subscribe', 'id' => $user->getId()]) ; ?>" class="btn btn-info">Subscribe</a>
+    <?php  else : ?>
+        <a href="<?php echo Url::to(['/user/profile/unsubscribe', 'id' => $user->getId()]) ; ?>" class="btn btn-info">Unsubscribe</a>
+    <?php endif; ?>
 <hr>
+<?php endif; ?>
 <br>
+
+<?php $mutualSubscriptions = $currentUser->getMutualSubscriptionsTo($user); ?>
+<?php if (!Yii::$app->user->isGuest && count($mutualSubscriptions) > 0) : ?>
+<h5>Friends, who are also following <?php echo Html::encode($user->username); ?>: </h5><br>
+<div class="row">
+    <?php foreach ($mutualSubscriptions as $item): ?>
+        <div class="col-md-12">
+            <a href="<?php echo Url::to(['/user/profile/view', 'nickname' => ($item['nickname']) ? $item['nickname'] : $item['id']]); ?>">
+                <?php echo Html::encode($item['username']); ?>
+            </a>
+        </div>
+    <?php endforeach; ?>
+</div>
+<?php endif; ?>
+
+<hr>
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal1">
-    Subscribers
+    Subscribers <?php echo $user->countSubscriptions(); ?>
 </button>
 
 <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2">
-    Followers
+    Followers <?php echo $user->countFollowers(); ?>
 </button>
 
 

@@ -35,9 +35,11 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-    ];
+    if (!Yii::$app->user->isGuest) {
+        $menuItems = [
+            ['label' => 'Home', 'url' => ['/user/profile/view', 'nickname' => Yii::$app->user->identity->getId()]],
+        ];
+    }
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Signup', 'url' => ['/user/default/signup']];
         $menuItems[] = ['label' => 'Login', 'url' => ['/user/default/login']];
