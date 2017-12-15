@@ -37,7 +37,7 @@ AppAsset::register($this);
     ]);
     if (!Yii::$app->user->isGuest) {
         $menuItems = [
-            ['label' => 'Home', 'url' => ['/user/profile/view', 'nickname' => Yii::$app->user->identity->getId()]],
+            ['label' => 'My page', 'url' => ['/user/profile/view', 'nickname' => Yii::$app->user->identity->getId()]],
         ];
     }
     if (Yii::$app->user->isGuest) {

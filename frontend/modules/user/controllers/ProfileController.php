@@ -2,11 +2,13 @@
 
 namespace frontend\modules\user\controllers;
 
+use frontend\models\PictureUpload;
 use frontend\models\User;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use Faker\Factory;
+use yii\web\UploadedFile;
 
 /**
  * Class ProfileController
@@ -15,7 +17,7 @@ use Faker\Factory;
 class ProfileController extends Controller
 {
     /**
-     * @param $id
+     * @param $nickname
      * @return string
      */
     public function actionView($nickname)
@@ -66,6 +68,7 @@ class ProfileController extends Controller
 
         /* @var $currentUser User */
         $currentUser = Yii::$app->user->identity;
+        /* @var $user User */
         $user = $this->findUser($id);
 
         $currentUser->unfollowUser($user);
@@ -74,8 +77,8 @@ class ProfileController extends Controller
     }
 
     /**
-     * @param integer $nickname
-     * @return User
+     * @param $id
+     * @return null|static
      * @throws NotFoundHttpException
      */
     private function findUserById($id)
@@ -86,34 +89,34 @@ class ProfileController extends Controller
         throw new NotFoundHttpException();
     }
 
+    /**
+     * @return string
+     */
     public function actionEdit()
     {
-        $user = Yii::$app->user;
-//        echo "<pre>";
-//        print_r($user);
-//        echo "</pre>";die;
+        /* @var $user User */
+        $user = Yii::$app->user->identity;
+
+        $pictureUpload = new PictureUpload();
+        $file = UploadedFile::getInstance($pictureUpload, 'picture');
+
+        if (Yii::$app->request->isPost) {
+            $formData = Yii::$app->request->post();
+
+
+            if ($user->load($formData) && $user->validate()) {
+                if (!$file == null) {
+                    $user->picture = $pictureUpload->uploadFile($file, $user->picture);
+                }
+                $user->save();
+                Yii::$app->session->setFlash('success', 'Edited');
+                return $this->redirect(["/profile/$user->nickname"]);
+            }
+        }
+
         return $this->render('edit', [
             'user' => $user,
+            'picture' => $pictureUpload,
         ]);
     }
-
-
-//    public function actionGenerate()
-//    {
-//        $faker = Factory::create();
-//
-//        for ($i = 0; $i < 1000; $i++) {
-//            $user = new User([
-//                'username' => $faker->name,
-//                'email' => $faker->email,
-//                'about' => $faker->text(200),
-//                'nickname' => $faker->regexify('[A-Za-z0-9]{5-15}'),
-//                'auth_key' => Yii::$app->security->generateRandomString(),
-//                'password_hash' => Yii::$app->security->generateRandomString(),
-//                'created_at' => $time = time(),
-//                'updated_at' => $time,
-//            ]);
-//            $user->save(false);
-//        }
-//    }
 }

@@ -9,38 +9,32 @@ use yii\helpers\Html;
 use yii\helpers\HtmlPurifier;
 ?>
 
+<?php echo Html::img('@web' . $user->getImage(), ['width' => 200])?>
 <h1><?php echo Html::encode($user->username); ?></h1>
+<?php if (!Yii::$app->user->isGuest) : ?>
 <?php if (($user->getId() == $currentUser->getId())) : ?>
     <?php echo Html::a("Edit", ["/user/profile/edit"], ["class" => "btn btn-info"])?>
+<?php endif; ?>
 <?php endif; ?>
 <p><?php echo HtmlPurifier::process($user->about); ?></p>
 <hr>
 
-<!--<pre>-->
-<!--    --><?php
-//    echo $user->username;
-//    echo "<br>";
-//    echo $currentUser->username;
-//    echo "<br>";
-//    print_r($currentUser->checkSubscription($user));
-//    echo "<br>";
-//    echo $user->getId();
-//    ?>
-<!--</pre>-->
-
-
-<?php if (!($user->getId() == $currentUser->getId())) : ?>
+<?php if (!Yii::$app->user->isGuest) : ?>
+<?php if (!($user->getId() == $currentUser->getId()) && !Yii::$app->user->isGuest) : ?>
     <?php if (!$currentUser->checkSubscription($user)) : ?>
         <a href="<?php echo Url::to(['/user/profile/subscribe', 'id' => $user->getId()]) ; ?>" class="btn btn-info">Subscribe</a>
     <?php  else : ?>
         <a href="<?php echo Url::to(['/user/profile/unsubscribe', 'id' => $user->getId()]) ; ?>" class="btn btn-info">Unsubscribe</a>
     <?php endif; ?>
-<hr>
+        <hr>
+    <?php endif; ?>
+
 <?php endif; ?>
 <br>
 
+<?php if (!Yii::$app->user->isGuest xor ($user->getId() == $currentUser->getId())) : ?>
 <?php $mutualSubscriptions = $currentUser->getMutualSubscriptionsTo($user); ?>
-<?php if (!Yii::$app->user->isGuest && count($mutualSubscriptions) > 0) : ?>
+<?php if (!Yii::$app->user->isGuest && $mutualSubscriptions) : ?>
 <h5>Friends, who are also following <?php echo Html::encode($user->username); ?>: </h5><br>
 <div class="row">
     <?php foreach ($mutualSubscriptions as $item): ?>
@@ -50,10 +44,12 @@ use yii\helpers\HtmlPurifier;
             </a>
         </div>
     <?php endforeach; ?>
+    <hr>
 </div>
 <?php endif; ?>
+<?php endif; ?>
 
-<hr>
+
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal1">
     Subscribers <?php echo $user->countSubscriptions(); ?>

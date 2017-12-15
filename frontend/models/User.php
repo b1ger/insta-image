@@ -23,7 +23,7 @@ use yii\web\IdentityInterface;
  * @property string $about
  * @property integer $type
  * @property string $nickname
- * @property string $picture
+ * @property string $picture read-write
  * @property string $password write-only password
  */
 class User extends ActiveRecord implements IdentityInterface
@@ -58,6 +58,11 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            [['username'], 'required'],
+            [['nickname'], 'required'],
+            [['username'], 'string', 'min' => 6],
+            [['nickname'], 'string', 'min' => 3],
+            [['about'], 'safe'],
         ];
     }
 
@@ -297,5 +302,32 @@ class User extends ActiveRecord implements IdentityInterface
         $key = "user:{$this->getId()}:subscriptions";
         $ids = $redis->smembers($key);
         return in_array($user->getId(), $ids);
+    }
+
+    /**
+     * @param $filename
+     * @return bool
+     */
+    public function savePicture($filename)
+    {
+        $this->image = $filename;
+        return $this->save(false);
+    }
+    public function getImage()
+    {
+        return ($this->picture) ? '/uploads/' . $this->picture : '/no-image.jpg';
+    }
+    /**
+     *
+     */
+    private function deletePicture()
+    {
+        $pictureUpload = new PictureUpload();
+        $pictureUpload->deleteCurrentPicture($this->picture);
+    }
+    public function beforeDelete()
+    {
+        $this->deletePicture();
+        return parent::beforeDelete();
     }
 }
