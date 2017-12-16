@@ -7,7 +7,6 @@ use frontend\models\User;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use Faker\Factory;
 use yii\web\UploadedFile;
 
 /**

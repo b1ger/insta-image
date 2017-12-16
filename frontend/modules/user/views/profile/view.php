@@ -20,7 +20,7 @@ use yii\helpers\HtmlPurifier;
 <hr>
 
 <?php if (!Yii::$app->user->isGuest) : ?>
-<?php if (!($user->getId() == $currentUser->getId()) && !Yii::$app->user->isGuest) : ?>
+<?php if (!($user->getId() == $currentUser->getId())) : ?>
     <?php if (!$currentUser->checkSubscription($user)) : ?>
         <a href="<?php echo Url::to(['/user/profile/subscribe', 'id' => $user->getId()]) ; ?>" class="btn btn-info">Subscribe</a>
     <?php  else : ?>
@@ -32,9 +32,9 @@ use yii\helpers\HtmlPurifier;
 <?php endif; ?>
 <br>
 
-<?php if (!Yii::$app->user->isGuest xor ($user->getId() == $currentUser->getId())) : ?>
+<?php if (!Yii::$app->user->isGuest) : ?>
 <?php $mutualSubscriptions = $currentUser->getMutualSubscriptionsTo($user); ?>
-<?php if (!Yii::$app->user->isGuest && $mutualSubscriptions) : ?>
+<?php if ($mutualSubscriptions && !($user->getId() == $currentUser->getId())) : ?>
 <h5>Friends, who are also following <?php echo Html::encode($user->username); ?>: </h5><br>
 <div class="row">
     <?php foreach ($mutualSubscriptions as $item): ?>
