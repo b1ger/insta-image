@@ -4,9 +4,11 @@ namespace frontend\modules\user\controllers;
 
 use frontend\models\PictureUpload;
 use frontend\models\User;
+use frontend\modules\user\models\forms\PictureForm;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 use yii\web\UploadedFile;
 
 /**
@@ -23,9 +25,12 @@ class ProfileController extends Controller
     {
         $currentUser = Yii::$app->user->identity;
 
+        $modelPicture = new PictureForm();
+
         return $this->render('view', [
             'user' => $this->findUser($nickname),
             'currentUser' => $currentUser,
+            'modelPicture' => $modelPicture,
         ]);
     }
 
@@ -77,7 +82,7 @@ class ProfileController extends Controller
 
     /**
      * @param $id
-     * @return null|static
+     * @return User
      * @throws NotFoundHttpException
      */
     private function findUserById($id)
@@ -117,5 +122,33 @@ class ProfileController extends Controller
             'user' => $user,
             'picture' => $pictureUpload,
         ]);
+    }
+
+    public function actionUploadPicture()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $model = new PictureForm();
+        $model->picture = UploadedFile::getInstance($model, 'picture');
+
+        if ($model->validate()) {
+            /* @var $user User */
+            $user = Yii::$app->user->identity;
+            if($user->picture) {
+                unlink(Yii::getAlias('@app') . $user->getPicture()); die;
+            } //= Yii::$app->storage->saveUploadedFile($model->picture);
+
+            if ($user->save(false, ['picture'])) {
+                return [
+                    'success' => true,
+                    'pictureUri' => Yii::$app->storage->getFile($user->picture),
+                ];
+            }
+
+            return [
+                'success' => false,
+                'errors' => $model->getErrors(),
+            ];
+        }
     }
 }

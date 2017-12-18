@@ -31,6 +31,8 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
 
+    const DEFAULT_PICTURE = "/img/default-picture.jpeg";
+
 
     /**
      * @inheritdoc
@@ -313,9 +315,13 @@ class User extends ActiveRecord implements IdentityInterface
         $this->image = $filename;
         return $this->save(false);
     }
-    public function getImage()
+
+    /**
+     * @return string
+     */
+    public function getPicture()
     {
-        return ($this->picture) ? '/uploads/' . $this->picture : '/no-image.jpg';
+        return ($this->picture) ? '/uploads/' . $this->picture : self::DEFAULT_PICTURE;
     }
     /**
      *

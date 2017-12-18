@@ -1,62 +1,81 @@
 <?php
-
 /* @var $this yii\web\View */
 /* @var $user frontend\models\User */
 /* @var $currentUser frontend\models\User */
+/* @var $modelPicture frontend\modules\user\models\forms\PictureForm */
 
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\helpers\HtmlPurifier;
+use dosamigos\fileupload\FileUpload;
+
 ?>
 
-<?php echo Html::img('@web' . $user->getImage(), ['width' => 200])?>
-<h1><?php echo Html::encode($user->username); ?></h1>
-<?php if (!Yii::$app->user->isGuest) : ?>
-<?php if (($user->getId() == $currentUser->getId())) : ?>
-    <?php echo Html::a("Edit", ["/user/profile/edit"], ["class" => "btn btn-info"])?>
-<?php endif; ?>
-<?php endif; ?>
+<img src="<?php echo $user->getPicture(); ?>" id="profile-picture" />
+<h3><?php echo Html::encode($user->username); ?></h3>
 <p><?php echo HtmlPurifier::process($user->about); ?></p>
 <hr>
 
-<?php if (!Yii::$app->user->isGuest) : ?>
-<?php if (!($user->getId() == $currentUser->getId())) : ?>
-    <?php if (!$currentUser->checkSubscription($user)) : ?>
-        <a href="<?php echo Url::to(['/user/profile/subscribe', 'id' => $user->getId()]) ; ?>" class="btn btn-info">Subscribe</a>
-    <?php  else : ?>
-        <a href="<?php echo Url::to(['/user/profile/unsubscribe', 'id' => $user->getId()]) ; ?>" class="btn btn-info">Unsubscribe</a>
-    <?php endif; ?>
-        <hr>
-    <?php endif; ?>
+<?php if ($currentUser) : ?>
+<?php if ($currentUser->equals($user)): ?>
 
-<?php endif; ?>
-<br>
+    <div class="alert alert-success display-none" id="profile-image-success">Profile image updated</div>
+    <div class="alert alert-danger display-none" id="profile-image-fail"></div>
 
-<?php if (!Yii::$app->user->isGuest) : ?>
-<?php $mutualSubscriptions = $currentUser->getMutualSubscriptionsTo($user); ?>
-<?php if ($mutualSubscriptions && !($user->getId() == $currentUser->getId())) : ?>
-<h5>Friends, who are also following <?php echo Html::encode($user->username); ?>: </h5><br>
-<div class="row">
-    <?php foreach ($mutualSubscriptions as $item): ?>
-        <div class="col-md-12">
-            <a href="<?php echo Url::to(['/user/profile/view', 'nickname' => ($item['nickname']) ? $item['nickname'] : $item['id']]); ?>">
-                <?php echo Html::encode($item['username']); ?>
-            </a>
-        </div>
-    <?php endforeach; ?>
+    <?= FileUpload::widget([
+        'model' => $modelPicture,
+        'attribute' => 'picture',
+        'url' => ['/user/profile/upload-picture'], // your url, this is just for demo purposes,
+        'options' => ['accept' => 'image/*'],
+        'clientEvents' => [
+            'fileuploaddone' => 'function(e, data) {
+                if (data.result.success) {
+                    $("#profile-image-success").show();
+                    $("#profile-image-fail").hide();
+                    $("#profile-picture").attr("src", data.result.pictureUri);
+                } else {
+                    $("#profile-image-fail").html(data.result.errors.picture).show();
+                    $("#profile-image-success").hide();
+                }
+            }',
+
+        ],
+    ]); ?>
+    <hr/>
+
+<?php else: ?>
+
+    <a href="<?php echo Url::to(['/user/profile/subscribe', 'id' => $user->getId()]); ?>" class="btn btn-info">Subscribe</a>
+    <a href="<?php echo Url::to(['/user/profile/unsubscribe', 'id' => $user->getId()]); ?>" class="btn btn-info">Unsubscribe</a>
+
     <hr>
-</div>
+
+    <?php if ($currentUser && $subscrabition = $currentUser->getMutualSubscriptionsTo($user)): ?>
+        <h5>Friends, who are also following <?php echo Html::encode($user->username); ?>: </h5>
+        <div class="row">
+            <?php foreach ($subscrabition as $item): ?>
+                <div class="col-md-12">
+                    <a href="<?php echo Url::to(['/user/profile/view', 'nickname' => ($item['nickname']) ? $item['nickname'] : $item['id']]); ?>">
+                        <?php echo Html::encode($item['username']); ?>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
 <?php endif; ?>
 <?php endif; ?>
 
+<hr>
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal1">
-    Subscribers <?php echo $user->countSubscriptions(); ?>
+    Subscriptions: <?php echo $user->countSubscriptions(); ?>
 </button>
 
+<!-- Button trigger modal -->
 <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2">
-    Followers <?php echo $user->countFollowers(); ?>
+    Followers: <?php echo $user->countFollowers(); ?>
 </button>
 
 
