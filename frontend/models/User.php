@@ -323,17 +323,17 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return ($this->picture) ? '/uploads/' . $this->picture : self::DEFAULT_PICTURE;
     }
+
     /**
-     *
+     * @return bool
      */
-    private function deletePicture()
+    public function deleteCurrentPicture()
     {
-        $pictureUpload = new PictureUpload();
-        $pictureUpload->deleteCurrentPicture($this->picture);
-    }
-    public function beforeDelete()
-    {
-        $this->deletePicture();
-        return parent::beforeDelete();
+        if ($this->picture && Yii::$app->storage->deletePicture($this->picture)) {
+            $this->picture = null;
+            return $this->save(false, ['picture']);
+        }
+
+        return false;
     }
 }

@@ -131,12 +131,16 @@ class ProfileController extends Controller
         $model = new PictureForm();
         $model->picture = UploadedFile::getInstance($model, 'picture');
 
+
         if ($model->validate()) {
             /* @var $user User */
             $user = Yii::$app->user->identity;
+
             if($user->picture) {
-                unlink(Yii::getAlias('@app') . $user->getPicture()); die;
-            } //= Yii::$app->storage->saveUploadedFile($model->picture);
+                unlink(Yii::getAlias('@app/web') . $user->getPicture());
+            }
+
+            $user->picture = Yii::$app->storage->saveUploadedFile($model->picture);
 
             if ($user->save(false, ['picture'])) {
                 return [
@@ -150,5 +154,19 @@ class ProfileController extends Controller
                 'errors' => $model->getErrors(),
             ];
         }
+    }
+
+    public function actionDeletePicture()
+    {
+        /* @var $user User */
+        $user = Yii::$app->user->identity;
+
+        if($user->deleteCurrentPicture()) {
+            Yii::$app->session->setFlash('success', 'Picture deleted');
+        } else {
+            Yii::$app->session->setFlash('danger', 'Error occurred');
+        }
+
+        return $this->redirect(['/user/profile/view', 'nickname' => $user->getNickname()]);
     }
 }

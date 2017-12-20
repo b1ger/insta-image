@@ -7,7 +7,7 @@ return [
     'storageUri' => '/uploads/',
 
     'profilePicture' => [
-        'maxWidth' => 1280,
-        'maxHeight' => 1024
+        'maxWidth' => 320,
+        'maxHeight' => 240
     ]
 ];
