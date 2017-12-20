@@ -34,5 +34,4 @@ phpunit.phar
 # vagrant runtime
 /.vagrant
 /frontend/web/uploads/
-frontend/components/
-frontend/modules/user/models/forms/
+
