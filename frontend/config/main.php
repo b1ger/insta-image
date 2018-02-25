@@ -41,6 +41,7 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'info' => 'site/php-info',
                 'profile/<nickname:\w+>' => 'user/profile/view',
                 'post/<id:\d+>' => 'post/default/view',
             ],
@@ -53,7 +54,10 @@ return [
         ],
         'storage' => [
             'class' => 'frontend\components\Storage',
-        ]
+        ],
+        'feedService' => [
+            'class' => 'frontend\components\FeedService',
+        ],
     ],
 
     'modules' => [

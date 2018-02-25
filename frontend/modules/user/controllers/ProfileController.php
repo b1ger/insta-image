@@ -2,7 +2,7 @@
 
 namespace frontend\modules\user\controllers;
 
-use frontend\models\PictureUpload;
+use frontend\models\Post;
 use frontend\models\User;
 use frontend\modules\user\models\forms\PictureForm;
 use Yii;
@@ -26,11 +26,14 @@ class ProfileController extends Controller
         $currentUser = Yii::$app->user->identity;
 
         $modelPicture = new PictureForm();
+        $user = $this->findUser($nickname);
+        $posts = Post::find()->where(['user_id' => $user->id])->all();
 
         return $this->render('view', [
-            'user' => $this->findUser($nickname),
+            'user' => $user,
             'currentUser' => $currentUser,
             'modelPicture' => $modelPicture,
+            'posts' => $posts,
         ]);
     }
 
@@ -94,36 +97,8 @@ class ProfileController extends Controller
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function actionEdit()
-    {
-        /* @var $user User */
-        $user = Yii::$app->user->identity;
-
-        $pictureUpload = new PictureUpload();
-        $file = UploadedFile::getInstance($pictureUpload, 'picture');
-
-        if (Yii::$app->request->isPost) {
-            $formData = Yii::$app->request->post();
-
-
-            if ($user->load($formData) && $user->validate()) {
-                if (!$file == null) {
-                    $user->picture = $pictureUpload->uploadFile($file, $user->picture);
-                }
-                $user->save();
-                Yii::$app->session->setFlash('success', 'Edited');
-                return $this->redirect(["/profile/$user->nickname"]);
-            }
-        }
-
-        return $this->render('edit', [
-            'user' => $user,
-            'picture' => $pictureUpload,
-        ]);
-    }
-
     public function actionUploadPicture()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;

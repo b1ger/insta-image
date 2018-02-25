@@ -23,34 +23,10 @@ class Storage extends Component implements StorageInterface
         $path = $this->preparePath($file);
 
         if ($path && $file->saveAs($path)) {
-            //$this->checkSize($path);
             return $this->fileName;
         }
-    }
 
-    /**
-     * Resize image if needed
-     */
-    public function checkSize($path)
-    {
-        $imageManager = new ImageManager(['driver' => 'imagick']);
-        $image = $imageManager->make($path);
-
-        $width = Yii::$app->params['profilePicture']['maxWidth'];
-        $height = Yii::$app->params['profilePicture']['maxHeight'];
-
-        if ($image->getHeight() > $height || $image->getWidth() > $width) {
-            // 3-й аргумент - органичения - специальные настройки при изменении размера
-            $image->resize($width, $height, function ($constraint) {
-
-                // Пропорции изображений оставлять такими же (например, для избежания широких или вытянутых лиц)
-                $constraint->aspectRatio();
-
-                // Изображения, размером меньше заданных $width, $height не будут изменены:
-                $constraint->upsize();
-
-            })->save($path);
-        }
+        return false;
     }
 
     /**

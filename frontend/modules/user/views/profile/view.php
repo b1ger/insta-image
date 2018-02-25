@@ -1,8 +1,10 @@
 <?php
+
 /* @var $this yii\web\View */
 /* @var $user frontend\models\User */
 /* @var $currentUser frontend\models\User */
 /* @var $modelPicture frontend\modules\user\models\forms\PictureForm */
+/* @var $posts \frontend\models\Post[] */
 
 use yii\helpers\Url;
 use yii\helpers\Html;
@@ -135,3 +137,28 @@ use dosamigos\fileupload\FileUpload;
     </div>
 </div>
 <!-- Modal followers -->
+
+<br>
+<br>
+
+<div class="col-md-12">
+    <?php if ($posts) : ?>
+
+        <?php foreach ($posts as $post) : ?>
+
+            <a href="<?php echo Url::to(['/post/default/view', 'id' => $post->getId()]); ?>">
+                <img src="<?php echo Yii::$app->storage->getFile($post->filename); ?>" />
+            </a>
+
+            <div class="col-md-12">
+                <?php echo HtmlPurifier::process($post->description); ?>
+            </div>
+
+            <div class="col-md-12">
+                <?php echo Yii::$app->formatter->asDatetime($post->created_at); ?>
+            </div>
+
+        <?php endforeach; ?>
+
+    <?php endif; ?>
+</div>

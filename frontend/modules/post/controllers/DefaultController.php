@@ -2,7 +2,7 @@
 
 namespace frontend\modules\post\controllers;
 
-use app\models\Post;
+use frontend\models\Post;
 use frontend\models\User;
 use frontend\modules\post\models\forms\PostForm;
 use Yii;
@@ -17,6 +17,10 @@ class DefaultController extends Controller
 {
     public function actionCreate()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         $model = new PostForm(Yii::$app->user->identity);
 
         if ($model->load(Yii::$app->request->post())) {

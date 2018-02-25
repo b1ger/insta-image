@@ -5,9 +5,10 @@ return [
     'maxFileSize' => 1024 * 1024 * 2,
     'storagePath' => '@frontend/web/uploads/',
     'storageUri' => '/uploads/',
+    'feedPostLimit' => 200,
 
     'profilePicture' => [
-        'maxWidth' => 320,
-        'maxHeight' => 240
+        'maxWidth' => 1024,
+        'maxHeight' => 768,
     ]
 ];

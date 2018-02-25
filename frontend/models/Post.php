@@ -1,9 +1,10 @@
 <?php
 
-namespace app\models;
+namespace frontend\models;
 
-use frontend\models\User;
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 use yii\redis\Connection;
 
 /**
@@ -15,7 +16,7 @@ use yii\redis\Connection;
  * @property string $description
  * @property integer $created_at
  */
-class Post extends \yii\db\ActiveRecord
+class Post extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -23,6 +24,18 @@ class Post extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return '{{post}}';
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
+                ],
+            ],
+        ];
     }
 
     /**
@@ -89,5 +102,21 @@ class Post extends \yii\db\ActiveRecord
         /* @var $redis Connection */
         $redis = Yii::$app->redis;
         return $redis->sismember("post:{$this->getId()}:likes", $user->getId());
+    }
+
+    public function hasComments($id)
+    {
+        $comments = Comment::find()->where(['post_id' => $id])->all();
+
+        if (count($comments) > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getComments()
+    {
+        return $this->hasMany(Comment::className(), ['post_id' => 'id']);
     }
 }
