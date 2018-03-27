@@ -4,6 +4,7 @@ namespace frontend\modules\post\controllers;
 
 use frontend\models\Post;
 use frontend\models\User;
+use frontend\modules\post\models\forms\CommentForm;
 use frontend\modules\post\models\forms\PostForm;
 use Yii;
 use yii\web\Controller;
@@ -41,12 +42,13 @@ class DefaultController extends Controller
     public function actionView($id)
     {
         $post = Post::findOne($id);
-
         $currentUser = Yii::$app->user->identity;
+        $commentForm = new CommentForm();
 
         return $this->render('view', [
             'post' => $post,
             'currentUser' => $currentUser,
+            'commentForm' => $commentForm,
         ]);
     }
 

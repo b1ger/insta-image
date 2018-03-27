@@ -56,8 +56,11 @@ $this->title = 'My Yii Application';
                             Like&nbsp;&nbsp;<span class="glyphicon glyphicon-thumbs-up"></span>
                         </a>
                     </div>
-
-
+                    <?php if (Yii::$app->redis->exists("comments:{$feedItem->post_id}:post")) : ?>
+                    <div class="col-md-12">
+                        <p><?php echo Html::encode('Comments: ' . Yii::$app->redis->get("comments:{$feedItem->post_id}:post")); ?></p>
+                    </div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="col-md-12"><hr/></div>

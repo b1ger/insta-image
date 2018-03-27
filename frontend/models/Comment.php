@@ -25,32 +25,6 @@ class Comment extends ActiveRecord
         return '{{comment}}';
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['text', 'username', 'post_id'], 'required'],
-            [['text'], 'string', 'max' => 1000],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'username' => '',
-            'post_id' => '',
-            'text' => '',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-        ];
-    }
-
     public function getDate()
     {
         return Yii::$app->formatter->asDate($this->updated_at, 'long');
