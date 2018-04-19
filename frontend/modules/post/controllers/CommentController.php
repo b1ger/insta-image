@@ -18,25 +18,19 @@ class CommentController extends Controller
     public function actionSave()
     {
         $form = new CommentForm();
-        $model = new Comment();
         $request = Yii::$app->request;
 
         if ($request->isPost) {
             $data = $request->post();
             $form->load($data);
             if ($form->validate()) {
-                $model->load($data);
-                echo '<pre>';
-                print_r($model->attributes);
-                echo '</pre>';
-                die;
-                if ($model->save()) {
+                if ($form->save()) {
                     /* @var $redis Connection */
                     $redis = Yii::$app->redis;
-                    if ($redis->exists("comments:{$model->post_id}:post")) {
-                        $redis->incr("comments:{$model->post_id}:post");
+                    if ($redis->exists("comments:{$form->post_id}:post")) {
+                        $redis->incr("comments:{$form->post_id}:post");
                     } else {
-                        $redis->set("comments:{$model->post_id}:post", 1);
+                        $redis->set("comments:{$form->post_id}:post", 1);
                     }
 
                     Yii::$app->session->setFlash('success', 'Comment have been added.');
@@ -46,7 +40,7 @@ class CommentController extends Controller
             }
         }
 
-        return $this->redirect($_SERVER['HTTP_REFERER']);
+        return $this->redirect(Yii::$app->request->referrer ?: Yii::$app->homeUrl);
     }
 
 

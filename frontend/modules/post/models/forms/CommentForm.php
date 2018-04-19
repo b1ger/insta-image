@@ -2,6 +2,7 @@
 
 namespace frontend\modules\post\models\forms;
 
+use frontend\models\Comment;
 use yii\base\Model;
 
 class CommentForm extends Model
@@ -35,16 +36,19 @@ class CommentForm extends Model
         ];
     }
 
-    public function bind()
+    public function save()
     {
-        return [
-            'CommentForm' => [
-                'username' => $this->username,
-                'text' => $this->text,
-                'created_at' => $this->created_at = time(),
-                'updated_at' => $this->created_at,
-                'post_id' => $this->post_id,
-            ]
-        ];
+        $comment = new Comment();
+        $comment->post_id = $this->post_id;
+        $comment->username = $this->username;
+        $comment->text = $this->text;
+        $comment->created_at = time();
+        $comment->updated_at = $comment->created_at;
+
+        if ($comment->save(false)) {
+            return true;
+        }
+
+        return false;
     }
 }
