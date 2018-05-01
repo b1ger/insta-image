@@ -54,13 +54,11 @@ FontAwesomeAsset::register($this);
                         <nav class="main-menu">
 
                             <?php
-                            $menuItems = [
-                                ['label' => 'Newsfeed', 'url' => ['/site/index']],
-                            ];
                             if (Yii::$app->user->isGuest) {
                                 $menuItems[] = ['label' => 'Signup', 'url' => ['/user/default/signup']];
                                 $menuItems[] = ['label' => 'Login', 'url' => ['/user/default/login']];
                             } else {
+                                $menuItems[] = ['label' => 'Newsfeed', 'url' => ['/site/index']];
                                 $menuItems[] = ['label' => 'My profile', 'url' => ['/user/profile/view', 'nickname' => Yii::$app->user->identity->getNickname()]];
                                 $menuItems[] = ['label' => 'Create post', 'url' => ['/post/default/create']];
                                 $menuItems[] = '<li>'
