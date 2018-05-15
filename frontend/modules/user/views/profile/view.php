@@ -9,7 +9,7 @@ use yii\helpers\Html;
 use yii\helpers\HtmlPurifier;
 use dosamigos\fileupload\FileUpload;
 
-$this->title = Html::encode($user->username);
+$this->title = Html::encode($user->first_name . ' ' . $user->last_name);
 ?>
 
 
@@ -26,7 +26,7 @@ $this->title = Html::encode($user->username);
                         <div class="profile-title">
                             <img src="<?php echo $user->getPicture(); ?>" id="profile-picture"  class="author-image" />
 
-                            <div class="author-name"><?php echo Html::encode($user->username); ?></div>
+                            <div class="author-name"><?php echo Html::encode($user->first_name . ' ' . $user->last_name); ?></div>
 
                             <?php if ($currentUser && $currentUser->equals($user)): ?>
 
@@ -67,7 +67,7 @@ $this->title = Html::encode($user->username);
                             <a href="<?php echo Url::to(['/user/profile/subscribe', 'id' => $user->getId()]); ?>" class="btn btn-info">Subscribe</a>
                             <a href="<?php echo Url::to(['/user/profile/unsubscribe', 'id' => $user->getId()]); ?>" class="btn btn-info">Unsubscribe</a>
                             <hr>
-                            <h5>Friends, who are also following <?php echo Html::encode($user->username); ?>: </h5>
+                            <h5>Friends, who are also following <?php echo Html::encode($user->first_name . ' ' . $user->last_name); ?>: </h5>
                             <div class="row">
                                 <?php foreach ($currentUser->getMutualSubscriptionsTo($user) as $item): ?>
                                     <div class="col-md-12">
@@ -133,7 +133,7 @@ $this->title = Html::encode($user->username);
                     <?php foreach ($user->getSubscriptions() as $subscription): ?>
                         <div class="col-md-12">
                             <a href="<?php echo Url::to(['/user/profile/view', 'nickname' => ($subscription['nickname']) ? $subscription['nickname'] : $subscription['id']]); ?>">
-                                <?php echo Html::encode($subscription['username']); ?>
+                                <?php echo Html::encode($subscription['first_name'] . ' ' . $subscription['last_name']); ?>
                             </a>
                         </div>
                     <?php endforeach; ?>
@@ -160,7 +160,7 @@ $this->title = Html::encode($user->username);
                     <?php foreach ($user->getFollowers() as $follower): ?>
                         <div class="col-md-12">
                             <a href="<?php echo Url::to(['/user/profile/view', 'nickname' => ($follower['nickname']) ? $follower['nickname'] : $follower['id']]); ?>">
-                                <?php echo Html::encode($follower['username']); ?>
+                                <?php echo Html::encode($follower['first_name'] . ' ' . $follower['last_name']); ?>
                             </a>
                         </div>
                     <?php endforeach; ?>

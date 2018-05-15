@@ -238,7 +238,7 @@ class User extends ActiveRecord implements IdentityInterface
         $redis = Yii::$app->redis;
         $key = "user:{$this->getId()}:subscriptions";
         $ids = $redis->smembers($key);
-        return User::find()->select('id, username, nickname')->where(['id' => $ids])->orderBy('username')->asArray()->all();
+        return User::find()->select('id, first_name, last_name, nickname')->where(['id' => $ids])->orderBy('first_name')->asArray()->all();
     }
 
     /**
@@ -250,7 +250,7 @@ class User extends ActiveRecord implements IdentityInterface
         $redis = Yii::$app->redis;
         $key = "user:{$this->getId()}:followers";
         $ids = $redis->smembers($key);
-        return User::find()->select('id, username, nickname')->where(['id' => $ids])->orderBy('username')->asArray()->all();
+        return User::find()->select('id, first_name, last_name, nickname')->where(['id' => $ids])->orderBy('first_name')->asArray()->all();
     }
 
     /**
@@ -288,7 +288,7 @@ class User extends ActiveRecord implements IdentityInterface
         $redis = Yii::$app->redis;
 
         $ids = $redis->sinter($key1, $key2);
-        return User::find()->select('id, username, nickname')->where(['id' => $ids])->orderBy('username')->asArray()->all();
+        return User::find()->select('id, first_name, last_name, nickname')->where(['id' => $ids])->orderBy('first_name')->asArray()->all();
     }
 
     /**

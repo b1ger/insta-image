@@ -2,6 +2,7 @@
 
 namespace frontend\modules\post\controllers;
 
+use frontend\models\Comment;
 use frontend\models\Post;
 use frontend\models\User;
 use frontend\modules\post\models\forms\CommentForm;
@@ -44,11 +45,13 @@ class DefaultController extends Controller
         $post = Post::findOne($id);
         $currentUser = Yii::$app->user->identity;
         $commentForm = new CommentForm();
+        $comments = Comment::find()->where(['post_id' => $post->id])->orderBy('updated_at')->all();
 
         return $this->render('view', [
             'post' => $post,
             'currentUser' => $currentUser,
             'commentForm' => $commentForm,
+            'comments' => $comments,
         ]);
     }
 
