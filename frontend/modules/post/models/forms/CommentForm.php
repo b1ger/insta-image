@@ -7,7 +7,7 @@ use yii\base\Model;
 
 class CommentForm extends Model
 {
-    public $username;
+    public $user_id;
     public $text;
     public $created_at;
     public $updated_at;
@@ -16,8 +16,8 @@ class CommentForm extends Model
     public function rules()
     {
         return [
-            [['text', 'username', 'post_id'], 'required'],
-            [['username'], 'string'],
+            [['text', 'user_id', 'post_id'], 'required'],
+            [['user_id'], 'integer'],
             [['text'], 'string'],
             [['post_id'], 'integer'],
             [['text'], 'string', 'max' => 1000],
@@ -28,9 +28,9 @@ class CommentForm extends Model
     {
         return [
             'id' => 'ID',
-            'username' => '',
+            'user_id' => '',
             'post_id' => '',
-            'text' => 'Comment',
+            'text' => '',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
@@ -40,7 +40,7 @@ class CommentForm extends Model
     {
         $comment = new Comment();
         $comment->post_id = $this->post_id;
-        $comment->username = $this->username;
+        $comment->user_id = $this->user_id;
         $comment->text = $this->text;
         $comment->created_at = time();
         $comment->updated_at = $comment->created_at;

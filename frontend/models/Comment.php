@@ -9,7 +9,7 @@ use yii\db\ActiveRecord;
  * This is the model class for table "comment".
  *
  * @property integer $id
- * @property integer $username
+ * @property integer $user_id
  * @property integer $post_id
  * @property string $text
  * @property integer $created_at
