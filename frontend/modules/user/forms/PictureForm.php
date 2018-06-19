@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\user\models\forms;
+namespace frontend\modules\user\forms;
 
 
 use Yii;
@@ -34,8 +34,9 @@ class PictureForm extends Model
     {
         if ($this->picture->error) {
             /* В объекте UploadedFile есть свойство error. Если в нем "1", значит
-            * произошла ошибка и работать с изображением не нужно, прерываем
-            * выполнение метода */
+             * произошла ошибка и работать с изображением не нужно, прерываем
+             * выполнение метода
+             */
             return;
         }
 

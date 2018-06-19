@@ -21,7 +21,7 @@ class PostCreatedEvent extends Event
     /**
      * @return User
      */
-    public function getUser(): User
+    public function getUser() : User
     {
         return $this->user;
     }
@@ -29,7 +29,7 @@ class PostCreatedEvent extends Event
     /**
      * @return Post
      */
-    public function getPost(): Post
+    public function getPost() : Post
     {
         return $this->post;
     }

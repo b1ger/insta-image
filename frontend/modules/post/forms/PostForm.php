@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\post\models\forms;
+namespace frontend\modules\post\forms;
 
 
 use frontend\models\Post;
@@ -75,7 +75,7 @@ class PostForm extends Model
         $image->resize($width, $height, function ($constraint) {
                 $constraint->aspectRatio();
                 $constraint->upsize();
-            })->save();
+        })->save();
     }
 
     /**

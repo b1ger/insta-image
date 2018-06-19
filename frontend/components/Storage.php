@@ -7,7 +7,6 @@ use Yii;
 use yii\base\Component;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
-use Intervention\Image\ImageManager;
 
 class Storage extends Component implements StorageInterface
 {

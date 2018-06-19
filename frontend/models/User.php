@@ -12,7 +12,8 @@ use yii\web\IdentityInterface;
  * User model
  *
  * @property integer $id
- * @property string $username
+ * @property string $first_name
+ * @property string $last_name
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $email
@@ -60,7 +61,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
-            [['username'], 'required'],
+            [['first_name', 'last_name'], 'required'],
             [['nickname'], 'safe'],
             [['about'], 'safe'],
         ];
@@ -370,4 +371,6 @@ class User extends ActiveRecord implements IdentityInterface
         $order = ['created_at' => SORT_DESC];
         return $this->hasMany(Post::className(), ['user_id' => 'id'])->orderBy($order)->all();
     }
+
+
 }

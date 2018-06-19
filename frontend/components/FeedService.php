@@ -20,7 +20,7 @@ class FeedService extends Component
 
             $feedItem->user_id = $follower['id'];
             $feedItem->author_id = $user->id;
-            $feedItem->author_name = $user->username;
+            $feedItem->author_name = $user->first_name . ' ' . $user->last_name;
             $feedItem->author_nickname = $user->nickname;
             $feedItem->author_picture = $user->getPicture();
             $feedItem->post_id = $post->id;

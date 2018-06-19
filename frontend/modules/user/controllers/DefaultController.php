@@ -2,6 +2,8 @@
 
 namespace frontend\modules\user\controllers;
 
+use frontend\models\User;
+use frontend\modules\user\forms\UserUpdateForm;
 use frontend\modules\user\models\LoginForm;
 use frontend\modules\user\components\AuthHandler;
 use frontend\modules\user\models\PasswordResetRequestForm;
@@ -122,6 +124,25 @@ class DefaultController extends Controller
         ]);
     }
 
+    public function actionEdit(int $id)
+    {
+        $form = new UserUpdateForm();
+        $request = Yii::$app->request;
+        $user = User::findOne($id);
+        $form->setUserParams($user);
+        if ($request->isPost) {
+            $form->load($request->post());
+            if ($form->validate()) {
+                $form->update();
+                Yii::$app->session->setFlash('success', 'User\'s params was updated.');
+                $this->redirect(['/user/profile/view', 'nickname' => ($form->nickname) ? $form->nickname : $id]);
+            }
+        }
+        return $this->render('edit', [
+            'updateForm' => $form,
+        ]);
+    }
+
     /**
      * Requests password reset.
      *
@@ -133,7 +154,6 @@ class DefaultController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-
                 return $this->goHome();
             } else {
                 Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');

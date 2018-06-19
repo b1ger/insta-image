@@ -4,7 +4,7 @@
 /* @var $post \frontend\models\Post */
 /* @var $likesCount integer */
 /* @var $currentUser \frontend\models\User */
-/* @var $commentForm \frontend\modules\post\models\forms\CommentForm */
+/* @var $commentForm \frontend\modules\post\forms\CommentForm */
 /* @var $comments \frontend\models\Comment[]*/
 
 use frontend\models\User;

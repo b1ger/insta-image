@@ -3,7 +3,7 @@
 namespace frontend\modules\post\controllers;
 
 use frontend\models\Comment;
-use frontend\modules\post\models\forms\CommentForm;
+use frontend\modules\post\forms\CommentForm;
 use yii\redis\Connection;
 use yii\web\Controller;
 use Yii;
@@ -52,7 +52,7 @@ class CommentController extends Controller
         $redis->decr("comments:{$model->post_id}:post");
         $model->delete();
 
-        return $this->redirect($_SERVER['HTTP_REFERER']);
+        return $this->redirect(Yii::$app->request->referrer ?: Yii::$app->homeUrl);
     }
 
     public function actionEdit(int $commentId, int $postId = null)

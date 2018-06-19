@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\post\models\forms;
+namespace frontend\modules\post\forms;
 
 use frontend\models\Comment;
 use yii\base\Model;

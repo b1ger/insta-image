@@ -4,7 +4,7 @@ namespace frontend\modules\user\controllers;
 
 use frontend\models\Post;
 use frontend\models\User;
-use frontend\modules\user\models\forms\PictureForm;
+use frontend\modules\user\forms\PictureForm;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -123,12 +123,12 @@ class ProfileController extends Controller
                     'pictureUri' => Yii::$app->storage->getFile($user->picture),
                 ];
             }
-
-            return [
-                'success' => false,
-                'errors' => $model->getErrors(),
-            ];
         }
+
+        return [
+            'success' => false,
+            'errors' => $model->getErrors(),
+        ];
     }
 
     public function actionDeletePicture()

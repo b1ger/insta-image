@@ -1,6 +1,6 @@
 <?php
 /* @var $this \yii\web\View */
-/* @var $model \frontend\modules\post\models\forms\PostForm */
+/* @var $model \frontend\modules\post\forms\PostForm */
 
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
