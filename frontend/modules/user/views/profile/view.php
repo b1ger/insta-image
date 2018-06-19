@@ -29,7 +29,7 @@ $this->title = Html::encode($user->first_name . ' ' . $user->last_name);
                             <div class="author-name"><?php echo Html::encode($user->first_name . ' ' . $user->last_name); ?></div>
                           <br>
                             <?php if ($currentUser && $currentUser->equals($user)): ?>
-                                <div class="mt-2">
+                                <div>
                                 <?=
                                 FileUpload::widget([
                                     'model' => $modelPicture,
