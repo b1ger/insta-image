@@ -31,6 +31,19 @@ class Feed extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public function rules()
+    {
+        return [
+            [['user_id', 'author_id', 'author_nickname', 'post_id', 'post_created_at'], 'integer'],
+            [['post_filename', 'post_created_at'], 'required'],
+            [['post_description'], 'string'],
+            [['author_name', 'author_picture', 'post_filename'], 'string', 'max' => 255],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function attributeLabels()
     {
         return [
@@ -47,10 +60,23 @@ class Feed extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * @return mixed
+     */
     public function countLikes()
     {
         /* @var $redis Connection */
         $redis = Yii::$app->redis;
         return $redis->scard("post:{$this->post_id}:likes");
+    }
+
+    /**
+     * @param \frontend\models\User $user
+     */
+    public function isReported(User $user)
+    {
+        /* @var $redis Connection */
+        $redis = Yii::$app->redis;
+        return $redis->sismember("post:{$this->post_id}:complaints", $user->getId());
     }
 }
