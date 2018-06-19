@@ -2,7 +2,7 @@
 /* @var $this yii\web\View */
 /* @var $user frontend\models\User */
 /* @var $currentUser frontend\models\User */
-/* @var $modelPicture frontend\modules\user\models\forms\PictureForm */
+/* @var $modelPicture frontend\modules\user\forms\PictureForm */
 
 use yii\helpers\Url;
 use yii\helpers\Html;
@@ -27,9 +27,9 @@ $this->title = Html::encode($user->first_name . ' ' . $user->last_name);
                             <img src="<?php echo $user->getPicture(); ?>" id="profile-picture"  class="author-image" />
 
                             <div class="author-name"><?php echo Html::encode($user->first_name . ' ' . $user->last_name); ?></div>
-
+                          <br>
                             <?php if ($currentUser && $currentUser->equals($user)): ?>
-
+                                <div class="mt-2">
                                 <?=
                                 FileUpload::widget([
                                     'model' => $modelPicture,
@@ -50,8 +50,8 @@ $this->title = Html::encode($user->first_name . ' ' . $user->last_name);
                                     ],
                                 ]);
                                 ?>
-                                <a href="#" class="btn btn-default">Edit profile</a>
-
+                                  <a href="<?php echo Url::to(['/user/default/edit', 'id' => $currentUser->getId()])?>" class="btn btn-default">Edit profile</a>
+                                </div>
                             <?php endif; ?>
 
                             <!--  <a href="#" class="btn btn-default">Upload profile image</a>-->
@@ -72,7 +72,7 @@ $this->title = Html::encode($user->first_name . ' ' . $user->last_name);
                                 <?php foreach ($currentUser->getMutualSubscriptionsTo($user) as $item): ?>
                                     <div class="col-md-12">
                                         <a href="<?php echo Url::to(['/user/profile/view', 'nickname' => ($item['nickname']) ? $item['nickname'] : $item['id']]); ?>">
-                                            <?php echo Html::encode($item['username']); ?>
+                                            <?php echo Html::encode($item['nickname']); ?>
                                         </a>
                                     </div>
                                 <?php endforeach; ?>
