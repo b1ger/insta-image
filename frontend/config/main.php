@@ -9,7 +9,13 @@ $params = array_merge(
 return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'language' => 'ru-RU',
+    'bootstrap' => [
+        'log',
+        [
+            'class' => frontend\components\LanguageSelector::class
+        ]
+    ],
     'controllerNamespace' => 'frontend\controllers',
 
     'components' => [
@@ -55,6 +61,13 @@ return [
         'feedService' => [
             'class' => 'frontend\components\FeedService',
         ],
+        'i18n' => [
+            'translations' => [
+                '*' => [
+                    'class' => 'yii\i18n\PhpMessageSource'
+                ]
+            ]
+        ]
     ],
 
     'modules' => [

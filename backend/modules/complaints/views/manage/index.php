@@ -13,46 +13,48 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?php try {
-        echo GridView::widget([
-            'dataProvider' => $dataProvider,
-            'columns' => [
-                ['class' => 'yii\grid\SerialColumn'],
+    <?php
+        try {
+            echo GridView::widget([
+                'dataProvider' => $dataProvider,
+                'columns' => [
+                    ['class' => 'yii\grid\SerialColumn'],
 
-                [
-                    'attribute' => 'id',
-                    'format' => 'raw',
-                    'value' => function ($post) {
-                        /* @var $post \backend\models\Post */
-                        return Html::a($post->id, ['view', 'id' => $post->id]);
-                    },
-                ],
-                'user_id',
-                [
-                    'attribute' => 'filename',
-                    'format' => 'raw',
-                    'value' => function ($post) {
-                        /* @var $post \backend\models\Post */
-                        return Html::img($post->getImage(), ['width' => '130px']);
-                    },
-                ],
-                'description:ntext',
-                'created_at:datetime',
-                'complaints',
-
-                [
-                    'class' => 'yii\grid\ActionColumn',
-                    'template' => '{view}&nbsp;&nbsp;&nbsp;{approve}&nbsp;&nbsp;&nbsp;{delete}',
-                    'buttons' => [
-                        'approve' => function ($url, $post) {
-                            return Html::a('<span class="glyphicon glyphicon-ok"></span>', ['approve', 'id' => $post->id]);
+                    [
+                        'attribute' => 'id',
+                        'format' => 'raw',
+                        'value' => function ($post) {
+                            /* @var $post \backend\models\Post */
+                            return Html::a($post->id, ['view', 'id' => $post->id]);
                         },
                     ],
+                    'user_id',
+                    [
+                        'attribute' => 'filename',
+                        'format' => 'raw',
+                        'value' => function ($post) {
+                            /* @var $post \backend\models\Post */
+                            return Html::img($post->getImage(), ['width' => '130px']);
+                        },
+                    ],
+                    'description:ntext',
+                    'created_at:datetime',
+                    'complaints',
 
+                    [
+                        'class' => 'yii\grid\ActionColumn',
+                        'template' => '{view}&nbsp;&nbsp;&nbsp;{approve}&nbsp;&nbsp;&nbsp;{delete}',
+                        'buttons' => [
+                            'approve' => function ($url, $post) {
+                                return Html::a('<span class="glyphicon glyphicon-ok"></span>', ['approve', 'id' => $post->id]);
+                            },
+                        ],
+
+                    ],
                 ],
-            ],
-        ]);
-    } catch (Exception $e) {
-        echo $e->getMessage();
-    } ?>
+            ]);
+        } catch (Exception $e) {
+            throw new NotFoundHttpException();
+        }
+    ?>
 </div>
