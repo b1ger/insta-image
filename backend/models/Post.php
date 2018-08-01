@@ -26,7 +26,7 @@ class Post extends \yii\db\ActiveRecord
 
     public static function findComplaints()
     {
-        return Post::find()->where('complaints > 0')->orderBy('complaints DESC');
+        return Post::find()->where('complaints > 0')->orderBy('complaints DESC')->all();
     }
 
     /**
