@@ -1,10 +1,10 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $complaints backend\models\Post[] */
 
 $this->title = 'Posts';
 $this->params['breadcrumbs'][] = $this->title;
@@ -13,48 +13,45 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?php
-        try {
-            echo GridView::widget([
-                'dataProvider' => $dataProvider,
-                'columns' => [
-                    ['class' => 'yii\grid\SerialColumn'],
+    <div class="row row-fluid">
+        <div class="col col-md-12">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>User ID</th>
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>Description</th>
+                    <th>Created at</th>
+                    <th>Complaints</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <?php if (count($complaints) > 0) : ?>
+                <tbody>
+                <?php $i = 0; ?>
+                <?php foreach ($complaints as $complaint) : ?>
+                <tr>
+                    <td><?php echo ++$i; ?></td>
+                    <td><?php echo $complaint->user_id; ?></td>
+                    <td><?php echo $complaint->id; ?></td>
+                    <td><?php echo Html::img($complaint->getImage()); ?></td>
+                    <td><?php echo $complaint->description; ?></td>
+                    <td><?php echo $complaint->created_at; ?></td>
+                    <td><?php echo $complaint->complaints; ?></td>
+                    <td>
+                        <a class="glyphicon glyphicon-search" href="<?php echo Url::toRoute(["/complaints/manage/view", 'id' => $complaint->id]); ?>"></a>&nbsp;
+                        <a class="glyphicon glyphicon-ok" href="<?php echo Url::toRoute(["/complaints/manage/approve", 'id' => $complaint->id]); ?>"></a>&nbsp;
+                        <a class="glyphicon glyphicon-remove" href="<?php echo Url::toRoute(["/complaints/manage/delete", 'id' => $complaint->id]); ?>"></a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+                </tbody>
+                <?php endif; ?>
+            </table>
+        </div>
+    </div>
 
-                    [
-                        'attribute' => 'id',
-                        'format' => 'raw',
-                        'value' => function ($post) {
-                            /* @var $post \backend\models\Post */
-                            return Html::a($post->id, ['view', 'id' => $post->id]);
-                        },
-                    ],
-                    'user_id',
-                    [
-                        'attribute' => 'filename',
-                        'format' => 'raw',
-                        'value' => function ($post) {
-                            /* @var $post \backend\models\Post */
-                            return Html::img($post->getImage(), ['width' => '130px']);
-                        },
-                    ],
-                    'description:ntext',
-                    'created_at:datetime',
-                    'complaints',
-
-                    [
-                        'class' => 'yii\grid\ActionColumn',
-                        'template' => '{view}&nbsp;&nbsp;&nbsp;{approve}&nbsp;&nbsp;&nbsp;{delete}',
-                        'buttons' => [
-                            'approve' => function ($url, $post) {
-                                return Html::a('<span class="glyphicon glyphicon-ok"></span>', ['approve', 'id' => $post->id]);
-                            },
-                        ],
-
-                    ],
-                ],
-            ]);
-        } catch (Exception $e) {
-            throw new NotFoundHttpException();
-        }
-    ?>
+    <?=count($complaints) ?>
 </div>

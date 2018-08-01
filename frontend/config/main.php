@@ -52,12 +52,6 @@ return [
                 'post/<id:\d+>' => 'post/default/view',
             ],
         ],
-        'redis' => [
-            'class' => 'yii\redis\Connection',
-            'hostname' => 'localhost',
-            'port' => 6379,
-            'database' => 0,
-        ],
         'feedService' => [
             'class' => 'frontend\components\FeedService',
         ],
