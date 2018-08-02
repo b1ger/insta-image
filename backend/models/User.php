@@ -5,13 +5,15 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
 /**
  * User model
  *
  * @property integer $id
- * @property string $username
+ * @property string $first_name
+ * @property string $last_name
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $email
@@ -20,11 +22,23 @@ use yii\web\IdentityInterface;
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
+ * @property string $picture
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+
+    public $roles;
+
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
+
+    const ROLE_ADMIN = 'admin';
+    const ROLE_MODERATOR = 'moderator';
+
+    public function __construct(array $config = [])
+    {
+        $this->on(self::EVENT_AFTER_UPDATE, [$this, 'saveRoles']);
+    }
 
 
     /**
@@ -53,6 +67,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            ['roles', 'safe'],
         ];
     }
 
@@ -185,5 +200,47 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImage()
+    {
+        if ($this->picture) {
+            return Yii::$app->storage->getFile($this->picture);
+        }
+    }
+
+    public function getRolesDropdown()
+    {
+        return [
+            self::ROLE_ADMIN => 'Admin',
+            self::ROLE_MODERATOR => 'Moderator',
+        ];
+    }
+
+    public function saveRoles()
+    {
+        Yii::$app->authManager->revokeAll($this->getId());
+
+        if (is_array($this->roles)) {
+            foreach ($this->roles as $roleName) {
+                if ($role = Yii::$app->authManager->getRole($roleName)) {
+                    Yii::$app->authManager->assign($role, $this->getId());
+                }
+            }
+        }
+    }
+
+    public function afterFind()
+    {
+        $this->roles = $this->getRoles();
+    }
+
+    public function getRoles()
+    {
+        $roles = Yii::$app->authManager->getRolesByUser($this->getId());
+        return ArrayHelper::getColumn($roles, 'name', false);
     }
 }
