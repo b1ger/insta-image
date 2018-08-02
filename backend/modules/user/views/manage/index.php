@@ -29,6 +29,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'last_name',
             'email',
             'created_at:datetime',
+            [
+                'attribute' => 'roles',
+                'value' => function($user) {
+                    return implode(', ', $user->getRoles());
+                }
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
