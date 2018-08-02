@@ -1,8 +1,10 @@
 <?php
 
 namespace frontend\models;
+
 use Yii;
 use yii\redis\Connection;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "feed".
@@ -18,7 +20,7 @@ use yii\redis\Connection;
  * @property string $post_description
  * @property integer $post_created_at
  */
-class Feed extends \yii\db\ActiveRecord
+class Feed extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -71,7 +73,8 @@ class Feed extends \yii\db\ActiveRecord
     }
 
     /**
-     * @param \frontend\models\User $user
+     * @param User $user
+     * @return mixed
      */
     public function isReported(User $user)
     {

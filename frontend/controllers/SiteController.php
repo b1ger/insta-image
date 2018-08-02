@@ -1,8 +1,8 @@
 <?php
 namespace frontend\controllers;
 
-use frontend\models\User;
 use Yii;
+use frontend\models\User;
 use yii\web\Controller;
 use yii\web\Cookie;
 
@@ -48,7 +48,6 @@ class SiteController extends Controller
 
     public function actionAbout()
     {
-
         return $this->render('about');
     }
 

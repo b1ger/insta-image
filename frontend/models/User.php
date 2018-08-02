@@ -126,6 +126,7 @@ class User extends ActiveRecord implements IdentityInterface
 
         $timestamp = (int) substr($token, strrpos($token, '_') + 1);
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
+
         return $timestamp + $expire >= time();
     }
 
@@ -239,7 +240,12 @@ class User extends ActiveRecord implements IdentityInterface
         $redis = Yii::$app->redis;
         $key = "user:{$this->getId()}:subscriptions";
         $ids = $redis->smembers($key);
-        return User::find()->select('id, first_name, last_name, nickname')->where(['id' => $ids])->orderBy('first_name')->asArray()->all();
+
+        return User::find()->select('id, first_name, last_name, nickname')
+                           ->where(['id' => $ids])
+                           ->orderBy('first_name')
+                           ->asArray()
+                           ->all();
     }
 
     /**
@@ -251,7 +257,12 @@ class User extends ActiveRecord implements IdentityInterface
         $redis = Yii::$app->redis;
         $key = "user:{$this->getId()}:followers";
         $ids = $redis->smembers($key);
-        return User::find()->select('id, first_name, last_name, nickname')->where(['id' => $ids])->orderBy('first_name')->asArray()->all();
+
+        return User::find()->select('id, first_name, last_name, nickname')
+                           ->where(['id' => $ids])
+                           ->orderBy('first_name')
+                           ->asArray()
+                           ->all();
     }
 
     /**
@@ -287,8 +298,8 @@ class User extends ActiveRecord implements IdentityInterface
 
         /* @var $redis Connection */
         $redis = Yii::$app->redis;
-
         $ids = $redis->sinter($key1, $key2);
+
         return User::find()->select('id, first_name, last_name, nickname')->where(['id' => $ids])->orderBy('first_name')->asArray()->all();
     }
 
@@ -302,6 +313,7 @@ class User extends ActiveRecord implements IdentityInterface
         $redis = Yii::$app->redis;
         $key = "user:{$this->getId()}:subscriptions";
         $ids = $redis->smembers($key);
+
         return in_array($user->getId(), $ids);
     }
 
@@ -343,7 +355,11 @@ class User extends ActiveRecord implements IdentityInterface
     public function getFeed(int $limit)
     {
         $order = ['post_created_at' => SORT_DESC];
-        return $this->hasMany(Feed::className(), ['user_id' => 'id'])->orderBy($order)->limit($limit)->all();
+
+        return $this->hasMany(Feed::className(), ['user_id' => 'id'])
+                    ->orderBy($order)
+                    ->limit($limit)
+                    ->all();
     }
 
     public function likesPost(int $postId)

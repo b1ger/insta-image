@@ -23,8 +23,10 @@ class CommentController extends Controller
         if ($request->isPost) {
             $data = $request->post();
             $form->load($data);
+
             if ($form->validate()) {
                 if ($form->save()) {
+
                     /* @var $redis Connection */
                     $redis = Yii::$app->redis;
                     if ($redis->exists("comments:{$form->post_id}:post")) {
@@ -40,13 +42,14 @@ class CommentController extends Controller
             }
         }
 
-        return $this->redirect(Yii::$app->request->referrer ?: Yii::$app->homeUrl);
+        return $this->redirect(Yii::$app->request->referrer ? : Yii::$app->homeUrl);
     }
 
 
     public function actionDelete($id)
     {
         $model = Comment::findOne($id);
+
         /* @var $redis Connection */
         $redis = Yii::$app->redis;
         $redis->decr("comments:{$model->post_id}:post");
@@ -69,6 +72,7 @@ class CommentController extends Controller
 
         $data = Yii::$app->request->post();
         $model->text = $data['Comment']['text'];
+
         if ($model->save()) {
             return $this->redirect(['/post/' . $data['postId']]);
         }

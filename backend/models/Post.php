@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "post".
@@ -14,7 +15,7 @@ use Yii;
  * @property int $created_at
  * @property int $complaints
  */
-class Post extends \yii\db\ActiveRecord
+class Post extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -26,7 +27,9 @@ class Post extends \yii\db\ActiveRecord
 
     public static function findComplaints()
     {
-        return Post::find()->where('complaints > 0')->orderBy('complaints DESC')->all();
+        return Post::find()->where('complaints > 0')
+                           ->orderBy('complaints DESC')
+                           ->all();
     }
 
     /**

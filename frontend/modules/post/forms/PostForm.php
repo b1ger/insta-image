@@ -2,7 +2,6 @@
 
 namespace frontend\modules\post\forms;
 
-
 use frontend\models\Post;
 use frontend\models\User;
 use Intervention\Image\ImageManager;
@@ -56,6 +55,7 @@ class PostForm extends Model
                 $event->user = $this->user;
                 $event->post = $post;
                 $this->trigger(self::EVENT_POST_CREATED, $event);
+
                 return true;
             }
         }
@@ -72,10 +72,12 @@ class PostForm extends Model
 
         $image = $manager->make($this->picture->tempName);
 
-        $image->resize($width, $height, function ($constraint) {
+        $image->resize($width, $height,
+            function ($constraint) {
                 $constraint->aspectRatio();
                 $constraint->upsize();
-        })->save();
+            }
+        )->save();
     }
 
     /**

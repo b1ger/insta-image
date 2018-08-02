@@ -7,6 +7,7 @@ use yii\base\Model;
 
 class CommentForm extends Model
 {
+
     public $user_id;
     public $text;
     public $created_at;

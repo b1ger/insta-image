@@ -17,6 +17,7 @@ use yii\web\UploadedFile;
  */
 class DefaultController extends Controller
 {
+
     public function actionCreate()
     {
         if (Yii::$app->user->isGuest) {
@@ -135,6 +136,7 @@ class DefaultController extends Controller
         if ($post = Post::findOne($id)) {
             return $post;
         }
+
         throw new NotFoundHttpException();
     }
 }
